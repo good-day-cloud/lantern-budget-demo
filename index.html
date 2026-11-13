@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lantern Budget · Free Demo</title>
+<meta name="description" content="A calm budget planner: see what's safe to spend today. No account, no subscription.">
+<meta name="theme-color" content="#FFF8EC">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Lantern Budget">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<style>
+:root{
+  --bg:#FFF8EC; --card:#FFFFFF; --ink:#1F2A44; --muted:#6B7280; --line:#EFE6D6;
+  --amber:#F2A541; --amber-ink:#7A4A06; --amber-soft:#FDEBCC;
+  --sage:#A8C3A0; --sage-soft:#E6F0E3; --sage-ink:#2F5A2A;
+  --rose:#E8A0A0; --rose-soft:#FBE7E7; --rose-ink:#8A2B2B;
+  --shadow:0 1px 2px rgba(31,42,68,.06),0 6px 20px rgba(31,42,68,.06);
+  --r:18px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141B2D; --card:#1F2A44; --ink:#F5EFE3; --muted:#A9B1C4; --line:#2E3A58;
+    --amber:#F2A541; --amber-ink:#FFD9A0; --amber-soft:#3A3326;
+    --sage-soft:#24352B; --sage-ink:#BFE0B7; --rose-soft:#3F2730; --rose-ink:#F5C2C2;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141B2D; --card:#1F2A44; --ink:#F5EFE3; --muted:#A9B1C4; --line:#2E3A58;
+  --amber:#F2A541; --amber-ink:#FFD9A0; --amber-soft:#3A3326;
+  --sage-soft:#24352B; --sage-ink:#BFE0B7; --rose-soft:#3F2730; --rose-ink:#F5C2C2;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font:16px/1.45 ui-rounded,"SF Pro Rounded","Nunito","Segoe UI",system-ui,-apple-system,sans-serif;
+  padding-bottom:calc(84px + env(safe-area-inset-bottom));-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:Georgia,"Fraunces","Times New Roman",serif;font-weight:600;margin:0}
+.wrap{max-width:640px;margin:0 auto;padding:16px}
+header.top{display:flex;align-items:center;gap:10px;padding:14px 16px 4px;max-width:640px;margin:0 auto}
+header.top .logo{width:34px;height:34px;flex:none}
+header.top h1{font-size:20px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+button.mode{background:var(--card);color:var(--ink);border:1.5px solid var(--line);border-radius:999px;width:44px;height:44px;padding:0;
+  display:grid;place-items:center;flex:none;box-shadow:var(--shadow)}
+button.mode svg{width:20px;height:20px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:var(--bg);border-radius:14px;padding:4px}
+.seg button{background:transparent;color:var(--muted);font-weight:600;min-height:40px;padding:8px 6px}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+.swatches{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.swatches button{background:var(--bg);color:var(--ink);border:2px solid transparent;font-weight:600;font-size:13px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;min-height:0}
+.swatches button.on{border-color:var(--amber)}
+.swatches .dots{display:flex}
+.swatches .dots i{width:20px;height:20px;border-radius:50%;border:2px solid var(--card);margin-left:-5px}
+.swatches .dots i:first-child{margin-left:0}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;margin:12px 0}
+.hero{text-align:center;padding:26px 18px;background:linear-gradient(160deg,var(--amber-soft),var(--card) 70%)}
+.hero .label{color:var(--muted);font-size:14px;letter-spacing:.02em}
+.hero .big{font-family:Georgia,"Fraunces",serif;font-size:52px;line-height:1.1;margin:6px 0;font-weight:600}
+.hero .big.neg{color:var(--rose-ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px}
+.chip{background:var(--bg);border-radius:999px;padding:6px 12px;font-size:14px;color:var(--muted)}
+.chip b{color:var(--ink)}
+.row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .grow{flex:1;min-width:0}
+.row .t{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .s{font-size:13px;color:var(--muted)}
+.amt{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.muted{color:var(--muted)} .small{font-size:13px}
+h2{font-size:22px;margin:18px 2px 4px}
+h3{font-size:17px;margin-bottom:8px}
+label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
+input,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);
+  border-radius:12px;padding:11px 12px;min-height:46px;-webkit-appearance:none;appearance:none}
+input:focus,select:focus{outline:none;border-color:var(--amber)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}
+button{font:inherit;cursor:pointer;border:0;border-radius:12px;padding:11px 16px;min-height:44px;
+  background:var(--amber);color:var(--on-accent,#2A1A02);font-weight:700}
+button.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);font-weight:600}
+button.soft{background:var(--amber-soft);color:var(--amber-ink)}
+button.link{background:none;color:var(--amber-ink);padding:4px 0;min-height:0;font-weight:600;text-decoration:underline}
+button.x{background:none;color:var(--muted);padding:6px 10px;min-height:36px;font-size:18px;font-weight:400}
+button.wide{width:100%;margin-top:12px}
+.quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.quick button{flex:1;min-width:60px}
+.check{width:26px;height:26px;border-radius:8px;border:2px solid var(--line);background:var(--card);flex:none;
+  display:grid;place-items:center;padding:0;min-height:0}
+.check.on{background:var(--sage);border-color:var(--sage)}
+.check.on::after{content:"";width:10px;height:6px;border:solid #fff;border-width:0 0 3px 3px;transform:rotate(-45deg) translate(1px,-1px)}
+.done .t{text-decoration:line-through;color:var(--muted)}
+.bar{height:10px;background:var(--bg);border-radius:99px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--sage);border-radius:99px}
+.note{background:var(--amber-soft);color:var(--amber-ink);border-radius:14px;padding:12px 14px;font-size:14px;margin:12px 0}
+.note.good{background:var(--sage-soft);color:var(--sage-ink)}
+.note.warn{background:var(--rose-soft);color:var(--rose-ink)}
+.demo{background:var(--ink);color:var(--bg);text-align:center;font-size:14px;padding:9px 12px}
+.demo a{color:var(--amber);font-weight:700}
+.next{display:flex;gap:12px;align-items:center}
+.next .dot{width:12px;height:12px;border-radius:50%;background:var(--amber);flex:none;box-shadow:0 0 0 6px var(--amber-soft)}
+.explain{font-size:14px;margin-top:12px;text-align:left}
+.explain .row{padding:6px 0}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);
+  display:flex;justify-content:center;padding:6px 6px calc(6px + env(safe-area-inset-bottom));z-index:5}
+nav.tabs .in{display:flex;max-width:640px;width:100%}
+nav.tabs button{flex:1;background:none;color:var(--muted);font-weight:600;font-size:12px;padding:6px 2px;
+  display:flex;flex-direction:column;align-items:center;gap:2px;min-height:52px;border-radius:12px}
+nav.tabs button svg{width:22px;height:22px}
+nav.tabs button.on{color:var(--ink);background:var(--amber-soft)}
+.modal{position:fixed;inset:0;background:rgba(20,27,45,.45);display:grid;place-items:center;padding:16px;z-index:10}
+.modal .card{width:100%;max-width:420px}
+.welcome{text-align:center;padding-top:30px}
+.welcome .logo{width:84px;height:84px}
+.welcome h1{font-size:30px;margin:12px 0 6px}
+.cat{display:inline-block;font-size:12px;background:var(--bg);border-radius:99px;padding:2px 8px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;z-index:20;max-width:90vw}
+.hidden{display:none}
+/* charts: marks use the theme accent; text always uses text colours */
+:root{--viz-1:var(--amber);--viz-ink:var(--amber-ink);--viz-dim:#CFCBC3}
+@supports (color: color-mix(in srgb, red, blue)){:root{--viz-dim:color-mix(in srgb,var(--muted) 38%,var(--card))}}
+.chead{display:flex;align-items:flex-start;gap:8px}
+.chead h3{margin-bottom:2px}
+.chead .grow{flex:1;min-width:0}
+button.tbtn{background:none;color:var(--amber-ink);border:1.5px solid var(--line);border-radius:999px;padding:4px 12px;min-height:32px;font-size:13px;font-weight:600;flex:none}
+.chart{margin-top:10px}
+svg.viz{display:block;touch-action:pan-y;overflow:visible;outline:none;-webkit-tap-highlight-color:transparent}
+svg.viz:focus-visible{outline:2px solid var(--amber);outline-offset:4px;border-radius:8px}
+svg.viz .grid{stroke:var(--line);stroke-width:1}
+svg.viz .base{stroke:var(--muted);stroke-opacity:.5;stroke-width:1}
+svg.viz .tick{fill:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+svg.viz .mark{transition:opacity .15s}
+svg.viz .mark.dim{opacity:.4}
+svg.viz .line{fill:none;stroke:var(--viz-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+svg.viz .area{fill:var(--viz-ink);fill-opacity:.1;stroke:none}
+svg.viz .pt{fill:var(--viz-ink);stroke:var(--card);stroke-width:2}
+svg.viz .ref,svg.viz .cross{stroke:var(--ink);stroke-opacity:.45;stroke-width:1}
+svg.viz .lbl{fill:var(--ink);font-size:11.5px;font-weight:600;paint-order:stroke;stroke:var(--card);stroke-width:4px;stroke-linejoin:round}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.legend i.refkey{width:16px;height:0;border-radius:0;border-top:1.5px solid var(--ink);opacity:.5;vertical-align:4px}
+#viztip{position:fixed;z-index:30;display:none;pointer-events:none;background:var(--card);color:var(--ink);border:1px solid var(--line);
+  border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:8px 11px;font-size:13px;max-width:260px}
+#viztip .tt{color:var(--muted);font-size:12px;margin-bottom:3px}
+#viztip .tr{display:flex;align-items:center;gap:6px;white-space:nowrap}
+#viztip .tr i{width:10px;height:3px;border-radius:2px;flex:none}
+#viztip .tr b{font-variant-numeric:tabular-nums}
+#viztip .tr span{color:var(--muted)}
+.ctable{margin-top:10px;max-height:280px;overflow:auto}
+.ctable table{width:100%;border-collapse:collapse;font-size:14px}
+.ctable th{text-align:left;color:var(--muted);font-weight:600;font-size:12px;position:sticky;top:0;background:var(--card)}
+.ctable th,.ctable td{padding:7px 4px;border-bottom:1px solid var(--line)}
+.ctable td:last-child,.ctable th:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.brand{display:none}
+.today-date{display:none}
+@media (min-width:900px){
+  body{padding-bottom:0;padding-left:240px}
+  .demo{margin-left:-240px}
+  nav.tabs{top:0;bottom:0;right:auto;width:240px;border-top:0;border-right:1px solid var(--line);
+    flex-direction:column;justify-content:flex-start;padding:22px 14px}
+  nav.tabs .in{flex-direction:column;gap:4px}
+  nav.tabs button{flex:none;flex-direction:row;justify-content:flex-start;gap:12px;font-size:15px;padding:10px 14px;min-height:46px}
+  .brand{display:flex;align-items:center;gap:10px;padding:0 8px 22px;font-family:Georgia,"Fraunces",serif;font-size:19px;font-weight:600;color:var(--ink)}
+  .brand .logo{width:36px;height:36px}
+  header.top{max-width:1160px;padding:28px 32px 0}
+  header.top .logo{display:none}
+  header.top h1{font-size:28px}
+  .today-date{display:block;margin:0 2px 4px}
+  .wrap{max-width:1160px;padding:8px 32px 40px}
+  .dash{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px;align-items:start}
+  .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+  .hero{padding:36px 24px}
+  .hero .big{font-size:72px}
+  .card{padding:22px}
+  .toast{bottom:28px;left:calc(50% + 120px)}
+}
+@media (min-width:900px) and (max-height:500px){nav.tabs{overflow:auto}}
+@media (max-width:380px){.hero .big{font-size:44px}}
+@media (max-width:520px){.grid3{grid-template-columns:1fr 1fr}.grid3>:first-child{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<div id="demoBar"></div>
+<header class="top" id="hdr"></header>
+<main class="wrap" id="app"></main>
+<nav class="tabs" id="nav"></nav>
+<script>
+"use strict";
+const DEMO = true;
+const SHOP_URL = "https://www.etsy.com/shop/LittleLanternApps";
+const KEY = DEMO ? "littlelantern.budget.demo.v1" : "littlelantern.budget.v1";
+const DEMO_LIMIT = 40;
+const COUNT_KEY = KEY + ".count";
+function getCount(){ try { return parseInt(localStorage.getItem(COUNT_KEY), 10) || 0; } catch(e){ return 0; } }
+function bumpCount(){ try { localStorage.setItem(COUNT_KEY, String(getCount() + 1)); } catch(e){} }
+const LOGO = '<svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="34" r="26" fill="#FDEBCC"/><path d="M24 14h16M32 8v6" stroke="#1F2A44" stroke-width="3.5" stroke-linecap="round"/><rect x="20" y="18" width="24" height="30" rx="9" fill="#1F2A44"/><rect x="25" y="23" width="14" height="20" rx="6" fill="#F2A541"/><path d="M22 52h20" stroke="#1F2A44" stroke-width="4" stroke-linecap="round"/></svg>';
+const CURRENCIES = ["USD","EUR","GBP","CAD","AUD","NZD","CHF","SEK","NOK","DKK","PLN","INR","JPY","MAD","AED","ZAR","MXN","BRL"];
+const CATS = ["Groceries","Eating out","Transport","Home","Kids","Health","Fun","Shopping","Other"];
+const ICONS = {
+  today:'<path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/>',
+  spend:'<rect x="3" y="6" width="18" height="13" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18" stroke="currentColor" stroke-width="2"/>',
+  bills:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 8h6M9 12h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  goals:'<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/>',
+  debt:'<path d="M4 6l6 6 4-4 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 14h5v-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+  settings:'<circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'
+};
+const TABS = [["today","Today"],["spend","Spend"],["bills","Bills"],["goals","Goals"],["debt","Debt"],["settings","Settings"]];
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid = () => Math.random().toString(36).slice(2, 10);
+const num = v => { const n = parseFloat(String(v).replace(",", ".")); return isFinite(n) ? Math.round(n * 100) / 100 : 0; };
+function pad(n){ return String(n).padStart(2, "0"); }
+function ds(d){ return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+function pd(s){ const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); }
+function today(){ return ds(new Date()); }
+function addDays(s, n){ const d = pd(s); d.setDate(d.getDate() + n); return ds(d); }
+function daysBetween(a, b){ return Math.round((pd(b) - pd(a)) / 86400000); }
+function dim(y, m){ return new Date(y, m + 1, 0).getDate(); }
+function addMonths(s, n, day){ const d = pd(s); const want = day || d.getDate(); const t = new Date(d.getFullYear(), d.getMonth() + n, 1); t.setDate(Math.min(want, dim(t.getFullYear(), t.getMonth()))); return ds(t); }
+function nice(s){ const d = pd(s); const t = today(); const diff = daysBetween(t, s);
+  if (diff === 0) return "Today"; if (diff === 1) return "Tomorrow"; if (diff === -1) return "Yesterday";
+  return d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" }); }
+function money(n){
+  try { return new Intl.NumberFormat(undefined, { style: "currency", currency: S.currency || "USD", maximumFractionDigits: Math.abs(n) >= 1000 ? 0 : 2 }).format(n); }
+  catch(e){ return (S.currency || "") + " " + n.toFixed(2); }
+}
+function toast(msg){ const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2600); }
+
+/* ---------- storage ---------- */
+let S = null;
+let tab = "today";
+let showMath = false;
+function load(){ try { const raw = localStorage.getItem(KEY); if (raw) return normalize(JSON.parse(raw)); } catch(e){} return null; }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+function normalize(o){
+  const base = blank();
+  const s = Object.assign(base, o || {});
+  s.pay = Object.assign(blank().pay, (o && o.pay) || {});
+  ["bills","spends","goals","debts"].forEach(k => { if (!Array.isArray(s[k])) s[k] = []; });
+  s.bills.forEach(b => { if (!b.paid) b.paid = {}; if (!b.from) b.from = "2000-01-01"; });
+  return s;
+}
+function blank(){
+  return { v: 1, title: "My calm money plan", name: "", currency: "USD", theme: "auto", palette: "lantern",
+    balance: 0, buffer: 0, pay: { amount: 0, next: addDays(today(), 14), freq: "biweekly" },
+    bills: [], spends: [], goals: [], debts: [], method: "snowball", extra: 0, hideCheck: "" };
+}
+function example(){
+  const t = today(); const d = pd(t);
+  const dayIn = n => pd(addDays(t, n)).getDate();
+  const s = blank();
+  Object.assign(s, { title: "Example plan", balance: 1240, buffer: 50, example: true,
+    pay: { amount: 1850, next: addDays(t, 6), freq: "biweekly" } });
+  s.bills = [
+    { id: uid(), name: "Rent", amount: 950, day: dayIn(9), paid: {}, from: addDays(t, -5) },
+    { id: uid(), name: "Phone", amount: 45, day: dayIn(2), paid: {}, from: addDays(t, -5) },
+    { id: uid(), name: "Internet", amount: 60, day: dayIn(4), paid: {}, from: addDays(t, -5) },
+    { id: uid(), name: "Streaming", amount: 16, day: dayIn(-3), paid: {}, from: addDays(t, -5) },
+    { id: uid(), name: "Car insurance", amount: 120, day: dayIn(12), paid: {}, from: addDays(t, -5) }
+  ];
+  const st = s.bills[3]; st.paid[addDays(t, -3)] = true;
+  s.spends = [
+    { id: uid(), amount: 42.5, cat: "Groceries", note: "Weekly shop", date: addDays(t, -1) },
+    { id: uid(), amount: 6.2, cat: "Eating out", note: "Coffee", date: addDays(t, -1) },
+    { id: uid(), amount: 30, cat: "Transport", note: "Fuel", date: addDays(t, -2) }
+  ];
+  // A few months of believable history so the charts have something to show.
+  let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  const typical = [["Groceries", 38, 30, "Weekly shop"], ["Eating out", 14, 18, ""], ["Transport", 22, 20, ""], ["Fun", 25, 30, ""], ["Shopping", 30, 40, ""], ["Health", 15, 20, "Pharmacy"]];
+  for (let i = 3; i <= 150; i++){
+    if (rnd() < 0.42) continue;
+    const [cat, base, spread, note] = typical[Math.floor(rnd() * typical.length)];
+    s.spends.push({ id: uid(), amount: Math.round((base + rnd() * spread) * 100) / 100, cat, note, date: addDays(t, -i) });
+  }
+  s.goals = [ { id: uid(), name: "Emergency fund", target: 1000, saved: 320 }, { id: uid(), name: "Summer trip", target: 600, saved: 90 } ];
+  s.debts = [
+    { id: uid(), name: "Credit card", balance: 1800, rate: 22.9, min: 55 },
+    { id: uid(), name: "Car loan", balance: 6400, rate: 6.5, min: 210 },
+    { id: uid(), name: "Store card", balance: 420, rate: 26, min: 25 }
+  ];
+  s.extra = 50;
+  return s;
+}
+
+/* ---------- money logic ---------- */
+function billDates(b, from, to){ // occurrence dates in [from, to)
+  const out = []; let d = pd(from); d = new Date(d.getFullYear(), d.getMonth(), 1);
+  const end = pd(to);
+  while (d < end){
+    const occ = new Date(d.getFullYear(), d.getMonth(), Math.min(b.day, dim(d.getFullYear(), d.getMonth())));
+    const o = ds(occ);
+    if (o >= from && o < to && o >= b.from) out.push(o);
+    d = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+  }
+  return out;
+}
+function occurrences(from, to){
+  const list = [];
+  S.bills.forEach(b => billDates(b, from, to).forEach(date => list.push({ bill: b, date, paid: !!b.paid[date] })));
+  return list.sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
+}
+function calc(){
+  const t = today();
+  const payday = S.pay.next > t ? S.pay.next : addDays(t, 1);
+  const days = Math.max(1, daysBetween(t, payday));
+  const due = occurrences(addDays(t, -31), payday).filter(o => !o.paid);
+  const overdue = due.filter(o => o.date < t);
+  const billsLeft = due.reduce((a, o) => a + o.bill.amount, 0);
+  const spentToday = S.spends.filter(s => s.date === t).reduce((a, s) => a + s.amount, 0);
+  const pool = S.balance + spentToday - billsLeft - S.buffer;
+  const daily = pool / days;
+  const left = daily - spentToday;
+  return { t, payday, days, due, overdue, billsLeft, spentToday, pool, daily, left };
+}
+function nextPayDate(s){
+  const f = S.pay.freq;
+  if (f === "weekly") return addDays(s, 7);
+  if (f === "biweekly") return addDays(s, 14);
+  if (f === "semimonthly"){ const d = pd(s); if (d.getDate() < 15) return ds(new Date(d.getFullYear(), d.getMonth(), 15)); return ds(new Date(d.getFullYear(), d.getMonth() + 1, 1)); }
+  return addMonths(s, 1);
+}
+function debtPlan(){
+  const debts = S.debts.filter(d => d.balance > 0).map(d => ({ ...d, bal: d.balance, paidOff: null, interest: 0 }));
+  if (!debts.length) return null;
+  const order = debts.slice().sort((a, b) => S.method === "avalanche" ? b.rate - a.rate || a.bal - b.bal : a.bal - b.bal || b.rate - a.rate);
+  const budget = debts.reduce((a, d) => a + d.min, 0) + (S.extra || 0);
+  let month = 0, totalInterest = 0;
+  const totalLeft = () => debts.reduce((a, d) => a + Math.max(0, d.bal), 0);
+  const timeline = [totalLeft()];
+  while (debts.some(d => d.bal > 0.005) && month < 600){
+    month++;
+    debts.forEach(d => { if (d.bal > 0){ const i = d.bal * d.rate / 1200; d.bal += i; d.interest += i; totalInterest += i; } });
+    let pot = budget;
+    debts.forEach(d => { if (d.bal > 0){ const p = Math.min(d.min, d.bal); d.bal -= p; pot -= p; } });
+    for (const d of order){ const live = debts.find(x => x.id === d.id); if (pot <= 0) break; if (live.bal > 0){ const p = Math.min(pot, live.bal); live.bal -= p; pot -= p; } }
+    debts.forEach(d => { if (d.bal <= 0.005 && d.paidOff == null){ d.bal = 0; d.paidOff = month; } });
+    timeline.push(totalLeft());
+  }
+  return { months: month, stuck: month >= 600, totalInterest, budget, timeline, order: order.map(o => debts.find(d => d.id === o.id)) };
+}
+function monthLabel(n){ const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() + n); return d.toLocaleDateString(undefined, { month: "long", year: "numeric" }); }
+function monthShort(n, withYear){ const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() + n); return d.toLocaleDateString(undefined, withYear ? { month: "short", year: "2-digit" } : { month: "short" }); }
+
+/* ---------- charts (plain SVG, coloured by the theme) ---------- */
+let CHARTS = [];
+const openTables = {};
+let hideActive = null;
+const SVGNS = "http://www.w3.org/2000/svg";
+function svgEl(tag, attrs, parent){ const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function svgText(parent, x, y, text, cls, anchor){ const t = svgEl("text", { x, y, class: cls, "text-anchor": anchor || "middle" }, parent); t.textContent = text; return t; }
+function moneyShort(n){
+  try { return new Intl.NumberFormat(undefined, { style: "currency", currency: S.currency || "USD", notation: "compact", maximumFractionDigits: 1 }).format(n); }
+  catch(e){ return money(n); }
+}
+function niceStep(max, count){
+  const raw = max / count, p = Math.pow(10, Math.floor(Math.log10(raw)));
+  for (const m of [1, 2, 2.5, 5, 10]) if (m * p >= raw) return m * p;
+  return 10 * p;
+}
+function spendTotals(){ const m = {}; S.spends.forEach(s => m[s.date] = (m[s.date] || 0) + s.amount); return m; }
+// spec: { key, type: "col"|"line", title, sub, summary, data: [{value, xlabel, color, label, marker}], ref, vmark, legend, tip(i), table, focus }
+function chartCard(spec){
+  const id = CHARTS.push(spec) - 1, open = !!openTables[spec.key];
+  return '<div class="card"><div class="chead"><div class="grow"><h3>' + esc(spec.title) + "</h3>" + (spec.sub ? '<div class="small muted">' + esc(spec.sub) + "</div>" : "") + "</div>" +
+    '<button class="tbtn" data-act="toggleTable" data-id="' + id + '" aria-pressed="' + open + '">' + (open ? "Chart" : "Table") + "</button></div>" +
+    (spec.legend || spec.ref ? '<div class="legend">' + (spec.legend || []).map(l => '<span><i style="background:' + l[1] + '"></i>' + esc(l[0]) + "</span>").join("") +
+      (spec.ref ? '<span><i class="refkey"></i>' + esc(spec.ref.label) + "</span>" : "") + "</div>" : "") +
+    '<div class="chart' + (open ? " hidden" : "") + '" data-chart="' + id + '"></div><div class="ctable' + (open ? "" : " hidden") + '" data-table="' + id + '"></div></div>';
+}
+function drawCharts(){
+  tipHide();
+  document.querySelectorAll("[data-chart]").forEach(el => { const s = CHARTS[+el.dataset.chart]; if (s && !el.classList.contains("hidden")) drawChart(el, s); });
+  document.querySelectorAll("[data-table]").forEach(el => { const s = CHARTS[+el.dataset.table]; if (s && !el.firstChild) el.appendChild(buildTable(s)); });
+}
+function buildTable(s){
+  const t = document.createElement("table"), head = t.createTHead().insertRow(), body = t.createTBody();
+  s.table.cols.forEach(c => { const th = document.createElement("th"); th.textContent = c; head.appendChild(th); });
+  s.table.rows.forEach(r => { const tr = body.insertRow(); r.forEach(c => { tr.insertCell().textContent = c; }); });
+  return t;
+}
+function drawChart(el, s){
+  el.textContent = "";
+  const pts = s.data, n = pts.length; if (!n) return;
+  const W = Math.max(240, el.clientWidth), H = s.height || 170;
+  const max = Math.max(s.ref ? s.ref.value : 0, ...pts.map(p => p.value), 1);
+  const step = niceStep(max, 3), top = Math.ceil(max / step - 1e-9) * step;
+  const L = 46, R = 10, T = s.vmark ? 18 : 14, B = 22, pw = W - L - R, ph = H - T - B;
+  const y = v => T + ph - v / top * ph;
+  const band = pw / n;
+  const pos = s.type === "col" ? i => L + band * (i + 0.5) : i => n === 1 ? L + pw / 2 : L + pw * i / (n - 1);
+  const svg = svgEl("svg", { width: W, height: H, viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": s.summary, tabindex: 0, class: "viz" }, el);
+  for (let v = 0; v <= top + 1e-9; v += step){
+    svgEl("line", { x1: L, x2: W - R, y1: y(v), y2: y(v), class: v === 0 ? "base" : "grid" }, svg);
+    svgText(svg, L - 6, y(v) + 4, moneyShort(v), "tick", "end");
+  }
+  const every = Math.max(1, Math.ceil(n / Math.max(1, Math.floor(pw / (s.type === "line" ? 52 : 34)))));
+  pts.forEach((p, i) => {
+    if (p.xlabel == null || (n - 1 - i) % every) return;
+    const anchor = s.type === "line" && i === 0 ? "start" : s.type === "line" && i === n - 1 ? "end" : "middle";
+    svgText(svg, pos(i), H - 6, p.xlabel, "tick", anchor);
+  });
+  const marks = [];
+  if (s.type === "col"){
+    const bw = Math.min(24, Math.max(2, band * 0.72), band - 2);
+    pts.forEach((p, i) => {
+      if (!(p.value > 0)){ marks.push(null); return; }
+      const x0 = pos(i) - bw / 2, x1 = x0 + bw, yt = y(p.value), yb = y(0), r = Math.min(4, bw / 2, yb - yt);
+      marks.push(svgEl("path", { d: "M" + x0 + "," + yb + "V" + (yt + r) + "Q" + x0 + "," + yt + " " + (x0 + r) + "," + yt + "H" + (x1 - r) + "Q" + x1 + "," + yt + " " + x1 + "," + (yt + r) + "V" + yb + "Z", fill: p.color || "var(--viz-1)", class: "mark" }, svg));
+    });
+  } else {
+    const d = pts.map((p, i) => (i ? "L" : "M") + pos(i).toFixed(1) + "," + y(p.value).toFixed(1)).join("");
+    svgEl("path", { d: d + "L" + pos(n - 1) + "," + y(0) + "L" + pos(0) + "," + y(0) + "Z", class: "area" }, svg);
+    svgEl("path", { d, class: "line" }, svg);
+    pts.forEach((p, i) => { if (p.marker) svgEl("circle", { cx: pos(i), cy: y(p.value), r: 4.5, class: "pt" }, svg); });
+  }
+  if (s.ref && s.ref.value > 0){ const ry = y(s.ref.value); svgEl("line", { x1: L, x2: W - R, y1: ry, y2: ry, class: "ref" }, svg); }
+  if (s.vmark){
+    const vx = pos(s.vmark.i);
+    svgEl("line", { x1: vx, x2: vx, y1: T, y2: T + ph, class: "ref" }, svg);
+    svgText(svg, Math.min(Math.max(vx, L + 18), W - R - 18), T - 5, s.vmark.label, "lbl");
+  }
+  pts.forEach((p, i) => {
+    if (!p.label) return;
+    const anchor = s.type === "line" && i === 0 ? "start" : s.type === "line" && i === n - 1 ? "end" : "middle";
+    svgText(svg, pos(i) + (anchor === "start" ? 2 : anchor === "end" ? -2 : 0), y(p.value) - 8, p.label, "lbl", anchor);
+  });
+  // hover / tap / keyboard: one tooltip, nearest point
+  const cross = s.type === "line" ? svgEl("line", { y1: T, y2: T + ph, class: "cross", visibility: "hidden" }, svg) : null;
+  const hot = s.type === "line" ? svgEl("circle", { r: 5, class: "pt", visibility: "hidden" }, svg) : null;
+  let cur = -1;
+  const hide = () => { cur = -1; marks.forEach(m => m && m.classList.remove("dim")); if (cross){ cross.setAttribute("visibility", "hidden"); hot.setAttribute("visibility", "hidden"); } tipHide(); };
+  const show = (i, cx, cy) => {
+    if (hideActive && hideActive !== hide) hideActive();
+    cur = i; hideActive = hide;
+    if (s.type === "col") marks.forEach((m, j) => m && m.classList.toggle("dim", j !== i));
+    else { cross.setAttribute("x1", pos(i)); cross.setAttribute("x2", pos(i)); cross.setAttribute("visibility", "visible"); hot.setAttribute("cx", pos(i)); hot.setAttribute("cy", y(pts[i].value)); hot.setAttribute("visibility", "visible"); }
+    const box = svg.getBoundingClientRect();
+    tipShow(s.tip(i), cx != null ? cx : box.left + pos(i), cy != null ? cy : box.top + y(pts[i].value));
+  };
+  const idxAt = clientX => { const x = clientX - svg.getBoundingClientRect().left; const i = s.type === "col" ? Math.floor((x - L) / band) : Math.round((x - L) / pw * (n - 1)); return Math.max(0, Math.min(n - 1, i)); };
+  svg.addEventListener("pointermove", e => show(idxAt(e.clientX), e.clientX, e.clientY));
+  svg.addEventListener("pointerdown", e => show(idxAt(e.clientX), e.clientX, e.clientY));
+  svg.addEventListener("pointerleave", e => { if (e.pointerType !== "touch") hide(); });
+  svg.addEventListener("focus", () => show(cur >= 0 ? cur : (s.focus != null ? s.focus : n - 1)));
+  svg.addEventListener("blur", hide);
+  svg.addEventListener("keydown", e => {
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight"){ e.preventDefault(); show(Math.max(0, Math.min(n - 1, (cur < 0 ? n - 1 : cur) + (e.key === "ArrowRight" ? 1 : -1)))); }
+    if (e.key === "Escape") hide();
+  });
+}
+function tipShow(t, x, y){
+  let el = document.getElementById("viztip");
+  if (!el){ el = document.createElement("div"); el.id = "viztip"; el.setAttribute("role", "status"); document.body.appendChild(el); }
+  el.textContent = "";
+  const h = document.createElement("div"); h.className = "tt"; h.textContent = t.title; el.appendChild(h);
+  t.rows.forEach(r => {
+    const row = document.createElement("div"); row.className = "tr";
+    if (r.key){ const k = document.createElement("i"); k.style.background = r.key; row.appendChild(k); }
+    const b = document.createElement("b"); b.textContent = r.value; row.appendChild(b);
+    if (r.label){ const sp = document.createElement("span"); sp.textContent = r.label; row.appendChild(sp); }
+    el.appendChild(row);
+  });
+  el.style.display = "block";
+  const w = el.offsetWidth, hh = el.offsetHeight;
+  let left = x + 14, top = y - hh - 12;
+  if (left + w > innerWidth - 8) left = x - w - 14;
+  if (left < 8) left = 8;
+  if (top < 8) top = y + 18;
+  el.style.left = left + "px"; el.style.top = top + "px";
+}
+function tipHide(){ const el = document.getElementById("viztip"); if (el) el.style.display = "none"; }
+document.addEventListener("pointerdown", e => { if (hideActive && !(e.target.closest && e.target.closest("svg.viz"))){ hideActive(); hideActive = null; } }, true);
+let resizeTimer = 0;
+window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(drawCharts, 120); });
+
+/* chart specs, one per chart */
+function chartWeek(c){
+  const t = today(), m = spendTotals(), days = [];
+  for (let i = 6; i >= 0; i--) days.push(addDays(t, -i));
+  const vals = days.map(d => m[d] || 0), sum = vals.reduce((a, v) => a + v, 0);
+  return chartCard({ key: "week", type: "col", title: "Last 7 days", sub: money(sum) + " spent",
+    summary: "Spending for the last 7 days, " + money(sum) + " in total.",
+    data: days.map((d, i) => ({ value: vals[i], xlabel: d === t ? "Today" : pd(d).toLocaleDateString(undefined, { weekday: "short" }), label: d === t && vals[i] > 0 ? money(vals[i]) : "" })),
+    ref: c.daily > 0 ? { value: c.daily, label: "Safe a day " + moneyShort(c.daily) } : null,
+    tip: i => ({ title: nice(days[i]), rows: [{ key: "var(--viz-1)", value: money(vals[i]), label: "spent" }] }),
+    table: { cols: ["Day", "Spent"], rows: days.map((d, i) => [nice(d), money(vals[i])]) } });
+}
+function chartMonths(){
+  const now = new Date(), months = [];
+  for (let k = 5; k >= 0; k--){ const d = new Date(now.getFullYear(), now.getMonth() - k, 1); months.push({ key: ds(d).slice(0, 7), n: -k }); }
+  const tot = {}; S.spends.forEach(s => { const k = s.date.slice(0, 7); tot[k] = (tot[k] || 0) + s.amount; });
+  const vals = months.map(mo => tot[mo.key] || 0);
+  return chartCard({ key: "months", type: "col", title: "Spending by month", sub: "This month and the 5 before",
+    summary: "Monthly spending for the last 6 months. This month: " + money(vals[5]) + ".",
+    legend: [["This month", "var(--viz-1)"], ["Earlier months", "var(--viz-dim)"]],
+    data: months.map((mo, i) => ({ value: vals[i], xlabel: monthShort(mo.n), color: i === 5 ? "var(--viz-1)" : "var(--viz-dim)", label: i === 5 && vals[i] > 0 ? money(vals[i]) : "" })),
+    tip: i => ({ title: monthLabel(months[i].n), rows: [{ key: i === 5 ? "var(--viz-1)" : "var(--viz-dim)", value: money(vals[i]), label: "spent" }] }),
+    table: { cols: ["Month", "Spent"], rows: months.map((mo, i) => [monthLabel(mo.n), money(vals[i])]) } });
+}
+function chartDaily(){
+  const t = today(), m = spendTotals(), days = [];
+  for (let i = 29; i >= 0; i--) days.push(addDays(t, -i));
+  const vals = days.map(d => m[d] || 0), avg = vals.reduce((a, v) => a + v, 0) / 30;
+  return chartCard({ key: "daily", type: "col", title: "Every day, last 30 days", sub: "About " + money(avg) + " a day on average",
+    summary: "Daily spending for the last 30 days, averaging " + money(avg) + " a day.",
+    data: days.map((d, i) => ({ value: vals[i], xlabel: String(pd(d).getDate()) })),
+    ref: avg > 0 ? { value: avg, label: "Average " + moneyShort(avg) } : null,
+    tip: i => ({ title: nice(days[i]), rows: [{ key: "var(--viz-1)", value: money(vals[i]), label: "spent" }] }),
+    table: { cols: ["Day", "Spent"], rows: days.slice().reverse().map(d => [nice(d), money(m[d] || 0)]) } });
+}
+function chartBillDays(){
+  const t = today(), td = pd(t), y0 = td.getFullYear(), m0 = td.getMonth(), nDays = dim(y0, m0);
+  const occ = occurrences(ds(new Date(y0, m0, 1)), ds(new Date(y0, m0 + 1, 1)));
+  const byDay = []; for (let i = 0; i < nDays; i++) byDay.push([]);
+  occ.forEach(o => byDay[pd(o.date).getDate() - 1].push(o));
+  const left = occ.filter(o => !o.paid).reduce((a, o) => a + o.bill.amount, 0);
+  return chartCard({ key: "billdays", type: "col", title: "When your bills land", sub: td.toLocaleDateString(undefined, { month: "long" }) + " · " + money(left) + " still to pay",
+    summary: "Bills by day of the month. " + money(left) + " still to pay this month.",
+    legend: [["Still to pay", "var(--viz-1)"], ["Paid", "var(--viz-dim)"]],
+    data: byDay.map((list, i) => ({ value: list.reduce((a, o) => a + o.bill.amount, 0), xlabel: String(i + 1), color: list.length && list.every(o => o.paid) ? "var(--viz-dim)" : "var(--viz-1)" })),
+    vmark: { i: td.getDate() - 1, label: "Today" }, focus: td.getDate() - 1,
+    tip: i => ({ title: nice(ds(new Date(y0, m0, i + 1))), rows: byDay[i].length ? byDay[i].map(o => ({ key: o.paid ? "var(--viz-dim)" : "var(--viz-1)", value: money(o.bill.amount), label: o.bill.name + (o.paid ? " · paid" : "") })) : [{ value: "No bills", label: "" }] }),
+    table: { cols: ["Date", "Bill", "Amount"], rows: occ.map(o => [nice(o.date), o.bill.name + (o.paid ? " (paid)" : ""), money(o.bill.amount)]) } });
+}
+function chartDebt(plan){
+  const tl = plan.timeline, n = tl.length - 1;
+  const done = {}; plan.order.forEach(d => { if (d.paidOff) (done[d.paidOff] = done[d.paidOff] || []).push(d.name); });
+  const rows = []; tl.forEach((v, i) => { if (n <= 48 || i % 6 === 0 || i === n || done[i]) rows.push([i === 0 ? "Today" : monthLabel(i), money(v)]); });
+  return chartCard({ key: "debtline", type: "line", title: "Your path to debt-free", sub: "Total left to pay, month by month",
+    summary: "Debt falls from " + money(tl[0]) + " to zero by " + monthLabel(n) + ".", height: 190,
+    data: tl.map((v, i) => ({ value: v, xlabel: i === 0 ? "Now" : monthShort(i, true), marker: !!done[i],
+      label: i === 0 ? money(v) : i === n ? "Debt-free" : "" })),
+    focus: 0,
+    tip: i => ({ title: i === 0 ? "Today" : monthLabel(i), rows: [{ key: "var(--viz-ink)", value: money(tl[i]), label: "left to pay" }].concat((done[i] || []).map(name => ({ value: name, label: "paid off 🎉" }))) }),
+    table: { cols: ["Month", "Left to pay"], rows } });
+}
+
+/* ---------- modal ---------- */
+function ask(title, fields, okText){
+  return new Promise(res => {
+    const m = document.createElement("div"); m.className = "modal";
+    m.innerHTML = '<div class="card"><h3>' + esc(title) + '</h3>' + fields.map((f, i) =>
+      '<label for="mf' + i + '">' + esc(f.label) + '</label><input id="mf' + i + '" type="' + (f.type || "text") + '" inputmode="' + (f.type === "number" ? "decimal" : "text") + '" value="' + esc(f.value == null ? "" : f.value) + '"' + (f.type === "number" ? ' step="0.01"' : "") + '>').join("") +
+      '<div class="grid2" style="margin-top:16px"><button class="ghost" data-c>Cancel</button><button data-o>' + esc(okText || "Save") + '</button></div></div>';
+    document.body.appendChild(m);
+    const first = m.querySelector("input"); if (first) setTimeout(() => first.focus(), 30);
+    const close = v => { m.remove(); res(v); };
+    m.querySelector("[data-c]").onclick = () => close(null);
+    m.onclick = e => { if (e.target === m) close(null); };
+    m.querySelector("[data-o]").onclick = () => close(fields.map((f, i) => m.querySelector("#mf" + i).value));
+    m.addEventListener("keydown", e => { if (e.key === "Enter") m.querySelector("[data-o]").click(); if (e.key === "Escape") close(null); });
+  });
+}
+function confirmBox(text, okText){
+  return new Promise(res => {
+    const m = document.createElement("div"); m.className = "modal";
+    m.innerHTML = '<div class="card"><p style="margin-top:0">' + esc(text) + '</p><div class="grid2"><button class="ghost" data-c>Cancel</button><button data-o>' + esc(okText || "OK") + '</button></div></div>';
+    document.body.appendChild(m);
+    m.querySelector("[data-c]").onclick = () => { m.remove(); res(false); };
+    m.querySelector("[data-o]").onclick = () => { m.remove(); res(true); };
+  });
+}
+
+/* ---------- views ---------- */
+// Colour themes: [bg, card, ink, muted, line, accent, accent text, accent soft, text on accent], light then dark.
+const PALETTES = {
+  lantern:  { name: "Lantern",  light: ["#FFF8EC","#FFFFFF","#1F2A44","#6B7280","#EFE6D6","#F2A541","#7A4A06","#FDEBCC","#2A1A02"],
+                                dark:  ["#141B2D","#1F2A44","#F5EFE3","#A9B1C4","#2E3A58","#F2A541","#FFD9A0","#3A3326","#2A1A02"] },
+  sage:     { name: "Sage",     light: ["#F4F7F0","#FFFFFF","#1E2B24","#5F6B63","#DFE8D8","#8DB580","#2F5A2A","#E2EEDC","#14261A"],
+                                dark:  ["#131C17","#1C2A22","#EEF3EA","#A3B3A8","#2C3D33","#9CC48F","#C6E6BC","#26382D","#14261A"] },
+  lavender: { name: "Lavender", light: ["#F7F4FB","#FFFFFF","#2A2340","#6B6680","#E7E0F2","#B39DDB","#5A3E8C","#ECE4F8","#1E1236"],
+                                dark:  ["#17142A","#241F3D","#F2EEFA","#B0A9C6","#352E55","#BBA6E6","#DCCFF7","#2F2850","#1E1236"] },
+  ocean:    { name: "Ocean",    light: ["#F1F7F9","#FFFFFF","#17303B","#5C6E77","#D9E7EC","#6FB3C8","#1F5B70","#DCEEF4","#0C2630"],
+                                dark:  ["#0F1C22","#182B33","#EAF4F7","#9FB4BC","#263F49","#7CC2D6","#BDE5F0","#1F3943","#0C2630"] },
+  rose:     { name: "Rose",     light: ["#FDF5F4","#FFFFFF","#3A2228","#7A6468","#F3E1DF","#E9A3A6","#8A3A44","#FAE3E3","#3A1218"],
+                                dark:  ["#1E1416","#2D1F23","#F8ECEC","#C2A9AD","#45303A","#EFB0B3","#F7CFD1","#3E2A2F","#3A1218"] },
+  pebble:   { name: "Pebble",   light: ["#F5F4F1","#FFFFFF","#222222","#6B6B6B","#E4E2DC","#C9B79C","#6B5532","#EEE7DC","#2A2116"],
+                                dark:  ["#161616","#222222","#F1EFEA","#ABA8A1","#333230","#D4C2A6","#E8D9BF","#33302A","#2A2116"] }
+};
+const PAL_VARS = ["--bg","--card","--ink","--muted","--line","--amber","--amber-ink","--amber-soft","--on-accent"];
+const darkQuery = window.matchMedia ? matchMedia("(prefers-color-scheme: dark)") : null;
+function currentMode(){ const t = S ? S.theme : "auto"; return t === "auto" ? (darkQuery && darkQuery.matches ? "dark" : "light") : t; }
+function applyTheme(){
+  const r = document.documentElement, mode = currentMode();
+  const pal = PALETTES[(S && S.palette) || "lantern"] || PALETTES.lantern;
+  r.setAttribute("data-theme", mode);
+  pal[mode].forEach((v, i) => r.style.setProperty(PAL_VARS[i], v));
+  const meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.content = pal[mode][0];
+}
+if (darkQuery && darkQuery.addEventListener) darkQuery.addEventListener("change", () => { if (!S || S.theme === "auto") render(); });
+const SUN = '<svg viewBox="0 0 24 24" aria-hidden="true">' + '<circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+const MOON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
+function renderChrome(){
+  $("#demoBar").innerHTML = DEMO ? '<div class="demo">Free demo · ' + Math.max(0, DEMO_LIMIT - getCount()) + ' spends left · <a href="' + esc(SHOP_URL) + '" target="_blank" rel="noopener">Get the full app</a></div>' : "";
+  if (!S){ $("#hdr").innerHTML = ""; $("#nav").innerHTML = ""; return; }
+  const dark = currentMode() === "dark";
+  $("#hdr").innerHTML = LOGO + "<h1>" + esc(S.title || "My calm money plan") + "</h1>" +
+    '<button class="mode" data-act="toggleMode" aria-label="Switch to ' + (dark ? "light" : "dark") + ' mode" title="Switch to ' + (dark ? "light" : "dark") + ' mode">' + (dark ? SUN : MOON) + "</button>";
+  $("#nav").innerHTML = '<div class="in"><div class="brand">' + LOGO + 'Lantern Budget</div>' + TABS.map(([k, l]) =>
+    '<button data-tab="' + k + '" class="' + (tab === k ? "on" : "") + '" aria-label="' + l + '"><svg viewBox="0 0 24 24">' + ICONS[k] + "</svg>" + l + "</button>").join("") + "</div>";
+}
+function render(){
+  applyTheme();
+  renderChrome();
+  const app = $("#app");
+  CHARTS = [];
+  if (!S){ app.innerHTML = viewWelcome(); tipHide(); return; }
+  app.innerHTML = ({ today: viewToday, spend: viewSpend, bills: viewBills, goals: viewGoals, debt: viewDebt, settings: viewSettings }[tab])();
+  window.scrollTo(0, 0);
+  drawCharts();
+}
+function viewWelcome(){
+  return '<div class="welcome">' + LOGO + '<h1>Lantern Budget</h1><p class="muted">One calm number: what you can safely spend today.</p>' +
+    '<div class="card" style="text-align:left"><h3>How would you like to start?</h3>' +
+    '<button class="wide" data-act="startExample">Explore with example numbers</button>' +
+    '<button class="wide ghost" data-act="startFresh">Start with my own numbers</button>' +
+    '<p class="small muted" style="margin-bottom:0">Your numbers stay on this device. No account, no bank connection.' + (DEMO ? " This is the free demo: everything works, with a limit of " + DEMO_LIMIT + " logged spends." : "") + "</p></div>" +
+    '<div class="card" style="text-align:left"><h3>Have a backup file?</h3><p class="small muted">Restore a backup from this app or from the demo.</p><button class="ghost wide" data-act="restore">Restore from backup</button></div></div>';
+}
+function viewSetup(){
+  return '<h2>Four quick steps</h2><p class="muted">You can change all of this later in Settings.</p>' +
+    '<div class="card"><h3>1. What\'s in your spending account right now?</h3><input id="su_bal" type="number" inputmode="decimal" step="0.01" placeholder="0.00"></div>' +
+    '<div class="card"><h3>2. Your next pay</h3><div class="grid2"><div><label>Amount</label><input id="su_amt" type="number" inputmode="decimal" step="0.01" placeholder="0.00"></div><div><label>Date</label><input id="su_date" type="date" value="' + addDays(today(), 14) + '"></div></div>' +
+    '<label>How often are you paid?</label><select id="su_freq"><option value="weekly">Every week</option><option value="biweekly" selected>Every 2 weeks</option><option value="semimonthly">Twice a month (1st and 15th)</option><option value="monthly">Once a month</option></select></div>' +
+    '<div class="card"><h3>3. Your currency</h3><select id="su_cur">' + CURRENCIES.map(c => '<option' + (c === "USD" ? " selected" : "") + ">" + c + "</option>").join("") + "</select></div>" +
+    '<div class="card"><h3>4. Add your bills</h3><p class="muted small" style="margin:0">After this, open the Bills tab and add rent, phone and the rest. It takes a minute.</p></div>' +
+    '<button class="wide" data-act="finishSetup">Show my safe-to-spend</button>';
+}
+function viewToday(){
+  const c = calc(); const t = c.t;
+  let h = '<p class="muted today-date">' + new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" }) + '</p><div class="dash"><div class="col">';
+  if (S.pay.next <= t && S.hideCheck !== t){
+    h += '<div class="card"><h3>Payday 🎉</h3><p class="muted" style="margin-top:0">Did your pay of <b>' + money(S.pay.amount) + "</b> arrive?</p>" +
+      '<div class="grid2"><button data-act="payYes">Yes, add it</button><button class="ghost" data-act="payNo">Not yet</button></div></div>';
+  }
+  const neg = c.left < 0;
+  h += '<div class="card hero"><div class="label">' + (neg ? "Over today's amount by" : "Safe to spend today") + '</div><div class="big' + (neg ? " neg" : "") + '">' + money(Math.abs(c.left)) + "</div>" +
+    '<div class="chips"><span class="chip">Payday in <b>' + c.days + (c.days === 1 ? " day" : " days") + '</b></span><span class="chip">Bills before then <b>' + money(c.billsLeft) + "</b></span></div>" +
+    '<button class="link" data-act="math" style="margin-top:12px">' + (showMath ? "Hide the maths" : "How is this worked out?") + "</button>" +
+    (showMath ? '<div class="explain">' +
+      line("In your account", S.balance) + (c.spentToday ? line("+ Spent today (added back)", c.spentToday) : "") +
+      line("− Bills still to pay before payday", -c.billsLeft) + (S.buffer ? line("− Safety cushion", -S.buffer) : "") +
+      line("= Money until payday", c.pool) + '<div class="row"><div class="grow">÷ ' + c.days + ' days</div><div class="amt">' + money(c.daily) + " a day</div></div>" +
+      (c.spentToday ? line("− Spent today", -c.spentToday) : "") + "</div>" : "") + "</div>";
+  // one next step
+  const step = nextStep(c);
+  h += '<div class="card next"><span class="dot"></span><div class="grow"><div class="small muted">Right now, one thing</div><div style="font-weight:600">' + step.text + "</div></div>" + (step.act ? '<button class="soft" data-act="' + step.act + '"' + (step.id ? ' data-id="' + step.id + '" data-date="' + step.date + '"' : "") + ">" + step.btn + "</button>" : "") + "</div>";
+  if (c.overdue.length) h += '<div class="note warn">' + c.overdue.length + " bill" + (c.overdue.length > 1 ? "s" : "") + " past the due date and not ticked yet. If you've paid, tick them in Bills.</div>";
+  // quick log
+  h += '<div class="card"><h3>Log a spend</h3><div class="grid2"><input id="q_amt" type="number" inputmode="decimal" step="0.01" placeholder="Amount"><select id="q_cat">' + CATS.map(x => "<option>" + x + "</option>").join("") + '</select></div>' +
+    '<div class="quick">' + [5, 10, 20, 50].map(v => '<button class="ghost" data-act="quickAmt" data-v="' + v + '">' + money(v) + "</button>").join("") + "</div>" +
+    '<button class="wide" data-act="addSpendQuick">Add spend</button></div>';
+  // upcoming
+  const up = occurrences(t, addDays(t, 14)).slice(0, 6);
+  h += '</div><div class="col">';
+  h += '<div class="card"><h3>Next two weeks</h3>' + (up.length ? up.map(o => billRow(o)).join("") : '<p class="muted small">No bills in the next two weeks.</p>') +
+    '<div class="row"><div class="grow"><div class="t">💛 Payday</div><div class="s">' + nice(S.pay.next) + '</div></div><div class="amt">+' + money(S.pay.amount) + "</div></div></div>";
+  h += chartWeek(c);
+  const ym = t.slice(0, 7);
+  const spentMonth = S.spends.filter(s => s.date.slice(0, 7) === ym).reduce((a, s) => a + s.amount, 0);
+  const gSaved = S.goals.reduce((a, g) => a + g.saved, 0), gTarget = S.goals.reduce((a, g) => a + g.target, 0);
+  const debtLeft = S.debts.reduce((a, d) => a + d.balance, 0), billsMonth = S.bills.reduce((a, b) => a + b.amount, 0);
+  const gl = (label, val, k) => '<div class="row" data-tab="' + k + '" style="cursor:pointer"><div class="grow">' + label + '</div><div class="amt">' + val + '</div></div>';
+  h += '<div class="card"><h3>At a glance</h3>' + gl("Spent this month", money(spentMonth), "spend") + gl("Bills each month", money(billsMonth), "bills") +
+    gl("Saved toward goals", money(gSaved) + (gTarget ? ' <span class="muted small">of ' + money(gTarget) + "</span>" : ""), "goals") + gl("Debt left", money(debtLeft), "debt") + "</div>";
+  if (S.example) h += '<div class="note">These are example numbers. When you\'re ready, go to Settings → <b>Start fresh with my numbers</b>.</div>';
+  h += "</div></div>";
+  return h;
+}
+function line(l, v){ return '<div class="row"><div class="grow">' + esc(l) + '</div><div class="amt">' + money(v) + "</div></div>"; }
+function nextStep(c){
+  if (S.example) return { text: "Have a look around. Every tab works.", act: "" };
+  if (!S.bills.length) return { text: "Add your first bill, like rent or phone.", act: "goBills", btn: "Add bill" };
+  if (c.overdue.length){ const o = c.overdue[0]; return { text: "Did you pay " + esc(o.bill.name) + " (" + money(o.bill.amount) + ")?", act: "payBill", id: o.bill.id, date: o.date, btn: "Paid" }; }
+  const soon = c.due.find(o => daysBetween(c.t, o.date) <= 2);
+  if (soon) return { text: esc(soon.bill.name) + " is due " + nice(soon.date).toLowerCase() + ".", act: "payBill", id: soon.bill.id, date: soon.date, btn: "Mark paid" };
+  if (!S.spends.some(s => s.date === c.t)) return { text: "Log anything you spend today. One tap is enough.", act: "" };
+  return { text: "You're all set for today. Nothing else needs you.", act: "" };
+}
+function billRow(o){
+  return '<div class="row' + (o.paid ? " done" : "") + '"><button class="check' + (o.paid ? " on" : "") + '" data-act="payBill" data-id="' + o.bill.id + '" data-date="' + o.date + '" aria-label="Mark paid"></button>' +
+    '<div class="grow"><div class="t">' + esc(o.bill.name) + '</div><div class="s">' + nice(o.date) + (o.paid ? " · paid" : "") + '</div></div><div class="amt">' + money(o.bill.amount) + "</div></div>";
+}
+function viewSpend(){
+  const t = today(); const ym = t.slice(0, 7);
+  const month = S.spends.filter(s => s.date.slice(0, 7) === ym);
+  const total = month.reduce((a, s) => a + s.amount, 0);
+  const byCat = {}; month.forEach(s => byCat[s.cat] = (byCat[s.cat] || 0) + s.amount);
+  const cats = Object.entries(byCat).sort((a, b) => b[1] - a[1]);
+  let h = '<h2>Spending</h2><div class="cols"><div class="col"><div class="card"><div class="grid3"><input id="s_amt" type="number" inputmode="decimal" step="0.01" placeholder="Amount"><select id="s_cat">' + CATS.map(x => "<option>" + x + "</option>").join("") + '</select><input id="s_date" type="date" value="' + t + '"></div>' +
+    '<label for="s_note">Note (optional)</label><input id="s_note" placeholder="e.g. lunch with Sam"><button class="wide" data-act="addSpend">Add spend</button></div>';
+  h += '<div class="card"><h3>This month · ' + money(total) + "</h3>" + (cats.length ? cats.map(([k, v]) => '<div class="row"><div class="grow"><div class="t">' + esc(k) + '</div><div class="bar"><i style="width:' + Math.round(v / total * 100) + '%"></i></div></div><div class="amt">' + money(v) + "</div></div>").join("") : '<p class="muted small">Nothing logged this month yet.</p>') + "</div>";
+  h += '</div><div class="col">';
+  h += chartMonths() + chartDaily();
+  const recent = S.spends.slice().sort((a, b) => a.date < b.date ? 1 : -1).slice(0, 40);
+  h += '<div class="card"><h3>Recent</h3>' + (recent.length ? recent.map(s => '<div class="row"><div class="grow"><div class="t">' + esc(s.note || s.cat) + '</div><div class="s">' + nice(s.date) + ' · <span class="cat">' + esc(s.cat) + '</span></div></div><div class="amt">' + money(s.amount) + '</div><button class="x" data-act="delSpend" data-id="' + s.id + '" aria-label="Delete">×</button></div>').join("") : '<p class="muted small">Your spends will show here.</p>') + "</div>";
+  return h + "</div></div>";
+}
+function viewBills(){
+  const t = today();
+  const occ = occurrences(addDays(t, -31), addDays(t, 35)).filter(o => !(o.paid && o.date < addDays(t, -7)));
+  const monthly = S.bills.reduce((a, b) => a + b.amount, 0);
+  let h = '<h2>Bills</h2><p class="muted" style="margin:0 2px">' + S.bills.length + " bills · " + money(monthly) + " a month. Tick a bill when it's paid; it comes out of your balance.</p>";
+  h += '<div class="cols"><div class="col">';
+  if (S.bills.length) h += chartBillDays();
+  h += '<div class="card"><h3>Coming up</h3>' + (occ.length ? occ.map(billRow).join("") : '<p class="muted small">No bills yet.</p>') + "</div>";
+  h += '</div><div class="col">';
+  h += '<div class="card"><h3>Add a bill</h3><div class="grid3"><input id="b_name" placeholder="Name, e.g. Rent"><input id="b_amt" type="number" inputmode="decimal" step="0.01" placeholder="Amount"><input id="b_day" type="number" inputmode="numeric" min="1" max="31" placeholder="Day"></div>' +
+    '<p class="small muted" style="margin:6px 0 0">Day of the month it goes out (1–31). Use 31 for "last day".</p><button class="wide" data-act="addBill">Add bill</button></div>';
+  if (S.bills.length) h += '<div class="card"><h3>All bills</h3>' + S.bills.slice().sort((a, b) => a.day - b.day).map(b => '<div class="row"><div class="grow"><div class="t">' + esc(b.name) + '</div><div class="s">Every month on day ' + b.day + '</div></div><div class="amt">' + money(b.amount) + '</div><button class="x" data-act="editBill" data-id="' + b.id + '" aria-label="Edit">✎</button><button class="x" data-act="delBill" data-id="' + b.id + '" aria-label="Delete">×</button></div>').join("") + "</div>";
+  return h + "</div></div>";
+}
+function viewGoals(){
+  let h = '<h2>Savings goals</h2><div class="cols"><div class="col">';
+  h += S.goals.length ? S.goals.map(g => { const p = g.target ? Math.min(100, Math.round(g.saved / g.target * 100)) : 0;
+    return '<div class="card"><div class="row" style="padding:0;border:0"><div class="grow"><div class="t">' + esc(g.name) + '</div><div class="s">' + money(g.saved) + " of " + money(g.target) + " · " + p + '%</div></div><button class="x" data-act="delGoal" data-id="' + g.id + '" aria-label="Delete">×</button></div><div class="bar"><i style="width:' + p + '%"></i></div>' +
+      (p >= 100 ? '<div class="note good">Goal reached. Well done. 🎉</div>' : '<div class="grid2" style="margin-top:12px"><button class="soft" data-act="addGoalMoney" data-id="' + g.id + '">Add money</button><button class="ghost" data-act="takeGoalMoney" data-id="' + g.id + '">Take out</button></div>') + "</div>"; }).join("")
+    : '<div class="card"><p class="muted" style="margin:0">No goals yet. Even a small one counts.</p></div>';
+  h += '</div><div class="col">';
+  h += '<div class="card"><h3>New goal</h3><div class="grid2"><input id="g_name" placeholder="e.g. Emergency fund"><input id="g_target" type="number" inputmode="decimal" step="0.01" placeholder="Target"></div><button class="wide" data-act="addGoal">Add goal</button>' +
+    '<p class="small muted" style="margin-bottom:0">Adding money to a goal moves it out of your spending balance.</p></div>';
+  return h + "</div></div>";
+}
+function viewDebt(){
+  const total = S.debts.reduce((a, d) => a + d.balance, 0);
+  const plan = debtPlan();
+  let h = '<h2>Debt payoff</h2><div class="cols"><div class="col">';
+  if (plan){
+    h += '<div class="card hero"><div class="label">Debt-free in</div><div class="big">' + (plan.stuck ? "—" : plan.months + (plan.months === 1 ? " month" : " months")) + "</div>" +
+      '<div class="chips"><span class="chip">' + (plan.stuck ? "Payments don't cover interest yet" : "<b>" + monthLabel(plan.months) + "</b>") + '</span><span class="chip">Total owed <b>' + money(total) + '</b></span><span class="chip">Interest <b>' + money(plan.totalInterest) + "</b></span></div></div>";
+    if (!plan.stuck) h += chartDebt(plan);
+    h += '<div class="card"><h3>Your payoff order</h3><div class="grid2" style="margin-bottom:8px"><button class="' + (S.method === "snowball" ? "" : "ghost") + '" data-act="method" data-v="snowball">Smallest first</button><button class="' + (S.method === "avalanche" ? "" : "ghost") + '" data-act="method" data-v="avalanche">Highest rate first</button></div>' +
+      '<p class="small muted">' + (S.method === "snowball" ? "Snowball: quick wins keep you going." : "Avalanche: pays the least interest overall.") + "</p>" +
+      plan.order.map((d, i) => '<div class="row"><div class="grow"><div class="t">' + (i + 1) + ". " + esc(d.name) + '</div><div class="s">' + d.rate + "% · min " + money(d.min) + (d.paidOff ? " · paid off " + monthLabel(d.paidOff) : "") + '</div></div><div class="amt">' + money(S.debts.find(x => x.id === d.id).balance) + '</div><button class="x" data-act="payDebt" data-id="' + d.id + '" aria-label="Record payment">＋</button><button class="x" data-act="delDebt" data-id="' + d.id + '" aria-label="Delete">×</button></div>').join("") +
+      '<label for="d_extra">Extra each month on top of minimums</label><input id="d_extra" type="number" inputmode="decimal" step="0.01" value="' + (S.extra || 0) + '" data-change="extra"></div>';
+  } else h += '<div class="card"><p class="muted" style="margin:0">No debts added. If you have none, that\'s great news.</p></div>';
+  h += '</div><div class="col">';
+  h += '<div class="card"><h3>Add a debt</h3><input id="d_name" placeholder="Name, e.g. Credit card"><div class="grid3" style="margin-top:10px"><input id="d_bal" type="number" inputmode="decimal" step="0.01" placeholder="Balance"><input id="d_rate" type="number" inputmode="decimal" step="0.01" placeholder="Rate %"><input id="d_min" type="number" inputmode="decimal" step="0.01" placeholder="Min"></div><button class="wide" data-act="addDebt">Add debt</button></div>';
+  return h + "</div></div>";
+}
+function viewSettings(){
+  let h = '<h2>Settings</h2><div class="cols"><div class="col">';
+  h += '<div class="card"><h3>Make it yours</h3><label>Planner title</label><input data-change="title" value="' + esc(S.title) + '">' +
+    '<label>Currency</label><select data-change="currency">' + CURRENCIES.map(c => "<option" + (c === S.currency ? " selected" : "") + ">" + c + "</option>").join("") + "</select>" +
+    '<label>Light or dark</label><div class="seg" role="group" aria-label="Light or dark">' + [["light","Light"],["dark","Dark"],["auto","Match device"]].map(([v, l]) =>
+      '<button class="' + (S.theme === v ? "on" : "") + '" data-act="setMode" data-v="' + v + '" aria-pressed="' + (S.theme === v) + '">' + l + "</button>").join("") + "</div>" +
+    '<label>Colour theme</label><div class="swatches" role="group" aria-label="Colour theme">' + Object.entries(PALETTES).map(([k, p]) => {
+      const c = p[currentMode()];
+      return '<button class="' + (S.palette === k ? "on" : "") + '" data-act="setPalette" data-v="' + k + '" aria-pressed="' + (S.palette === k) + '"><span class="dots"><i style="background:' + c[7] + '"></i><i style="background:' + c[5] + '"></i><i style="background:' + c[6] + '"></i></span>' + p.name + "</button>"; }).join("") + "</div></div>";
+  h += '<div class="card"><h3>Money</h3><div class="grid2"><div><label>Balance right now</label><input type="number" inputmode="decimal" step="0.01" data-change="balance" value="' + S.balance + '"></div><div><label>Safety cushion</label><input type="number" inputmode="decimal" step="0.01" data-change="buffer" value="' + S.buffer + '"></div></div>' +
+    '<p class="small muted">The cushion is kept aside and never counted as safe to spend.</p>' +
+    '<div class="grid2"><div><label>Pay amount</label><input type="number" inputmode="decimal" step="0.01" data-change="payAmount" value="' + S.pay.amount + '"></div><div><label>Next payday</label><input type="date" data-change="payNext" value="' + S.pay.next + '"></div></div>' +
+    '<label>Paid</label><select data-change="payFreq">' + [["weekly","Every week"],["biweekly","Every 2 weeks"],["semimonthly","Twice a month (1st and 15th)"],["monthly","Once a month"]].map(([v, l]) => '<option value="' + v + '"' + (S.pay.freq === v ? " selected" : "") + ">" + l + "</option>").join("") + "</select></div>";
+  h += '</div><div class="col">';
+  h += '<div class="card"><h3>Keep your numbers safe</h3><p class="small muted" style="margin-top:0">Everything is saved on this device only. Download a backup now and then.</p>' +
+    '<div class="grid2"><button class="soft" data-act="backup">Download backup</button><button class="ghost" data-act="restore">Restore backup</button></div><button class="ghost wide" data-act="csv">Export spending (CSV)</button></div>';
+  if (!DEMO) h += '<div class="card"><h3>Use it like an app</h3><p class="small" style="margin:0"><b>iPhone / iPad:</b> open in Safari → Share → Add to Home Screen.<br><b>Android:</b> Chrome → ⋮ menu → Add to Home screen.<br><b>Computer:</b> Chrome or Edge → install icon in the address bar.<br>Once added, it works offline.</p></div>';
+  else h += '<div class="card"><h3>Enjoying the demo?</h3><p class="small muted" style="margin-top:0">The full app has no spend limit, can be added to your Home Screen and works offline. Download a backup first and the full app will open it.</p><a href="' + esc(SHOP_URL) + '" target="_blank" rel="noopener"><button class="wide">Get the full app</button></a></div>';
+  h += '<div class="card"><h3>Start over</h3>' + (S.example ? '<button class="wide" data-act="fresh">Start fresh with my numbers</button>' : '<button class="ghost wide" data-act="reset">Erase everything</button>') + "</div>";
+  h += '<p class="small muted" style="text-align:center">Lantern Budget by LittleLanternApps · Not financial advice.</p>';
+  return h + "</div></div>";
+}
+
+/* ---------- actions ---------- */
+function addSpend(amount, cat, note, date){
+  amount = num(amount);
+  if (!(amount > 0)){ toast("Type an amount first."); return false; }
+  if (DEMO && getCount() >= DEMO_LIMIT){ toast("The demo's " + DEMO_LIMIT + " spends are used. Everything you typed stays readable."); return false; }
+  S.spends.push({ id: uid(), amount, cat: cat || "Other", note: (note || "").trim().slice(0, 80), date: date || today() });
+  if (!date || date <= today()) S.balance = num(S.balance - amount);
+  if (DEMO) bumpCount();
+  save(); toast("Logged " + money(amount)); return true;
+}
+function download(name, text, type){
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name;
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+function restore(){
+  const inp = document.createElement("input"); inp.type = "file"; inp.accept = ".json,application/json";
+  inp.onchange = () => { const f = inp.files[0]; if (!f) return; const r = new FileReader();
+    r.onload = () => { try { const o = JSON.parse(r.result); if (!o || !o.pay) throw 0; S = normalize(o); save(); tab = "today"; render(); toast("Backup restored."); } catch(e){ toast("That file isn't a Lantern Budget backup."); } };
+    r.readAsText(f); };
+  inp.click();
+}
+const actions = {
+  startExample(){ S = example(); save(); tab = "today"; render(); },
+  startFresh(){ $("#app").innerHTML = viewSetup(); renderChrome(); window.scrollTo(0, 0); },
+  finishSetup(){
+    const s = blank(); s.balance = num($("#su_bal").value); s.pay.amount = num($("#su_amt").value);
+    s.pay.next = $("#su_date").value || addDays(today(), 14); s.pay.freq = $("#su_freq").value; s.currency = $("#su_cur").value;
+    S = s; save(); tab = "bills"; render(); toast("Saved. Now add your bills.");
+  },
+  restore,
+  math(){ showMath = !showMath; render(); },
+  goBills(){ tab = "bills"; render(); },
+  payYes(){ S.balance = num(S.balance + S.pay.amount); let n = S.pay.next; const t = today(); while (n <= t) n = nextPayDate(n); S.pay.next = n; save(); render(); toast("Pay added. Next payday " + nice(n) + "."); },
+  payNo(){ S.hideCheck = today(); save(); render(); },
+  quickAmt(el){ $("#q_amt").value = el.dataset.v; },
+  addSpendQuick(){ if (addSpend($("#q_amt").value, $("#q_cat").value, "", today())) render(); },
+  addSpend(){ if (addSpend($("#s_amt").value, $("#s_cat").value, $("#s_note").value, $("#s_date").value)) render(); },
+  delSpend(el){ const i = S.spends.findIndex(s => s.id === el.dataset.id); if (i < 0) return; const s = S.spends[i]; if (s.date <= today()) S.balance = num(S.balance + s.amount); S.spends.splice(i, 1); save(); render(); toast("Deleted. Amount added back."); },
+  payBill(el){ const b = S.bills.find(x => x.id === el.dataset.id); if (!b) return; const d = el.dataset.date;
+    if (b.paid[d]){ delete b.paid[d]; S.balance = num(S.balance + b.amount); } else { b.paid[d] = true; S.balance = num(S.balance - b.amount); }
+    save(); render(); },
+  addBill(){ const name = $("#b_name").value.trim(), amount = num($("#b_amt").value), day = Math.min(31, Math.max(1, parseInt($("#b_day").value, 10) || 0));
+    if (!name || !(amount > 0) || !$("#b_day").value){ toast("Add a name, amount and day."); return; }
+    S.bills.push({ id: uid(), name: name.slice(0, 40), amount, day, paid: {}, from: today() }); save(); render(); toast("Bill added."); },
+  async editBill(el){ const b = S.bills.find(x => x.id === el.dataset.id); if (!b) return;
+    const v = await ask("Edit bill", [{ label: "Name", value: b.name }, { label: "Amount", type: "number", value: b.amount }, { label: "Day of month", type: "number", value: b.day }]);
+    if (!v) return; b.name = v[0].trim().slice(0, 40) || b.name; b.amount = num(v[1]) || b.amount; b.day = Math.min(31, Math.max(1, parseInt(v[2], 10) || b.day)); save(); render(); },
+  async delBill(el){ if (await confirmBox("Delete this bill?", "Delete")){ S.bills = S.bills.filter(b => b.id !== el.dataset.id); save(); render(); } },
+  addGoal(){ const name = $("#g_name").value.trim(), target = num($("#g_target").value); if (!name || !(target > 0)){ toast("Add a name and target."); return; }
+    S.goals.push({ id: uid(), name: name.slice(0, 40), target, saved: 0 }); save(); render(); },
+  async addGoalMoney(el){ const g = S.goals.find(x => x.id === el.dataset.id); const v = await ask("Add to " + g.name, [{ label: "Amount", type: "number" }], "Add"); if (!v) return; const a = num(v[0]); if (a > 0){ g.saved = num(g.saved + a); S.balance = num(S.balance - a); save(); render(); } },
+  async takeGoalMoney(el){ const g = S.goals.find(x => x.id === el.dataset.id); const v = await ask("Take out of " + g.name, [{ label: "Amount", type: "number" }], "Take out"); if (!v) return; const a = Math.min(num(v[0]), g.saved); if (a > 0){ g.saved = num(g.saved - a); S.balance = num(S.balance + a); save(); render(); } },
+  async delGoal(el){ if (await confirmBox("Delete this goal? Money saved in it is not moved back.", "Delete")){ S.goals = S.goals.filter(g => g.id !== el.dataset.id); save(); render(); } },
+  addDebt(){ const name = $("#d_name").value.trim(), bal = num($("#d_bal").value), rate = num($("#d_rate").value), min = num($("#d_min").value);
+    if (!name || !(bal > 0) || !(min > 0)){ toast("Add a name, balance and minimum payment."); return; }
+    S.debts.push({ id: uid(), name: name.slice(0, 40), balance: bal, rate, min }); save(); render(); },
+  async payDebt(el){ const d = S.debts.find(x => x.id === el.dataset.id); const v = await ask("Payment to " + d.name, [{ label: "Amount paid", type: "number" }], "Record"); if (!v) return; const a = Math.min(num(v[0]), d.balance); if (a > 0){ d.balance = num(d.balance - a); S.balance = num(S.balance - a); save(); render(); toast(d.balance === 0 ? d.name + " is paid off! 🎉" : "Payment recorded."); } },
+  async delDebt(el){ if (await confirmBox("Delete this debt?", "Delete")){ S.debts = S.debts.filter(d => d.id !== el.dataset.id); save(); render(); } },
+  method(el){ S.method = el.dataset.v; save(); render(); },
+  toggleTable(el){
+    const s = CHARTS[+el.dataset.id]; if (!s) return;
+    const open = openTables[s.key] = !openTables[s.key], card = el.closest(".card");
+    card.querySelector("[data-chart]").classList.toggle("hidden", open);
+    card.querySelector("[data-table]").classList.toggle("hidden", !open);
+    el.textContent = open ? "Chart" : "Table"; el.setAttribute("aria-pressed", open);
+    drawCharts();
+  },
+  toggleMode(){ S.theme = currentMode() === "dark" ? "light" : "dark"; save(); render(); },
+  setMode(el){ S.theme = el.dataset.v; save(); render(); },
+  setPalette(el){ if (PALETTES[el.dataset.v]){ S.palette = el.dataset.v; save(); render(); } },
+  backup(){ download("lantern-budget-backup-" + today() + ".json", JSON.stringify(S, null, 1), "application/json"); },
+  csv(){ const rows = [["Date","Amount","Category","Note"]].concat(S.spends.slice().sort((a, b) => a.date < b.date ? -1 : 1).map(s => [s.date, s.amount, s.cat, s.note]));
+    download("lantern-spending-" + today() + ".csv", rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(",")).join("\n"), "text/csv"); },
+  async fresh(){ if (await confirmBox("Clear the example numbers and start with yours?", "Start fresh")) actions.startFresh(); },
+  async reset(){ if (await confirmBox("Erase everything on this device? Download a backup first if you might need it.", "Erase")){ S = null; try { localStorage.removeItem(KEY); } catch(e){} render(); } }
+};
+const changes = {
+  title: v => S.title = v.slice(0, 40) || "My calm money plan",
+  currency: v => S.currency = v,
+  theme: v => S.theme = v,
+  balance: v => S.balance = num(v),
+  buffer: v => S.buffer = Math.max(0, num(v)),
+  payAmount: v => S.pay.amount = num(v),
+  payNext: v => { if (v) { S.pay.next = v; S.hideCheck = ""; } },
+  payFreq: v => S.pay.freq = v,
+  extra: v => S.extra = Math.max(0, num(v))
+};
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-tab]"); if (t){ tab = t.dataset.tab; showMath = false; render(); return; }
+  const a = e.target.closest("[data-act]"); if (a && actions[a.dataset.act]){ e.preventDefault(); actions[a.dataset.act](a); }
+});
+document.addEventListener("change", e => {
+  const k = e.target.dataset && e.target.dataset.change; if (!k || !changes[k]) return;
+  changes[k](e.target.value); if (S.example && ["balance","payAmount","payNext"].includes(k)) S.example = false; save();
+  if (k === "title") renderChrome(); else render();
+});
+
+/* ---------- start ---------- */
+S = load();
+render();
+if (!DEMO && "serviceWorker" in navigator && location.protocol === "https:"){
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+}
+</script>
+</body>
+</html>
