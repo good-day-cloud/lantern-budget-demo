@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lantern Budget · Free Demo</title>
 <meta name="description" content="A calm budget planner: see what's safe to spend today. No account, no subscription.">
-<meta name="theme-color" content="#FFF8EC">
+<meta name="theme-color" content="#F4F2EA">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -15,8 +15,8 @@
 
 <style>
 :root{
-  --bg:#FFF8EC; --card:#FFFFFF; --ink:#1F2A44; --muted:#6B7280; --line:#EFE6D6;
-  --amber:#F2A541; --amber-ink:#7A4A06; --amber-soft:#FDEBCC;
+  --bg:#F4F2EA; --card:#FFFFFF; --ink:#1C2B25; --muted:#5F6B64; --line:#E3E4DA;
+  --amber:#2F6B54; --amber-ink:#1F4D3E; --amber-soft:#E1EBE3;
   --sage:#A8C3A0; --sage-soft:#E6F0E3; --sage-ink:#2F5A2A;
   --rose:#E8A0A0; --rose-soft:#FBE7E7; --rose-ink:#8A2B2B;
   --shadow:0 1px 2px rgba(31,42,68,.06),0 6px 20px rgba(31,42,68,.06);
@@ -24,15 +24,15 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#141B2D; --card:#1F2A44; --ink:#F5EFE3; --muted:#A9B1C4; --line:#2E3A58;
-    --amber:#F2A541; --amber-ink:#FFD9A0; --amber-soft:#3A3326;
+    --bg:#111916; --card:#1B2621; --ink:#EEF2EC; --muted:#A3B1A8; --line:#2B3A33;
+    --amber:#8CC2A4; --amber-ink:#C4E3D0; --amber-soft:#23352D;
     --sage-soft:#24352B; --sage-ink:#BFE0B7; --rose-soft:#3F2730; --rose-ink:#F5C2C2;
     --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
   }
 }
 :root[data-theme="dark"]{
-  --bg:#141B2D; --card:#1F2A44; --ink:#F5EFE3; --muted:#A9B1C4; --line:#2E3A58;
-  --amber:#F2A541; --amber-ink:#FFD9A0; --amber-soft:#3A3326;
+  --bg:#111916; --card:#1B2621; --ink:#EEF2EC; --muted:#A3B1A8; --line:#2B3A33;
+  --amber:#8CC2A4; --amber-ink:#C4E3D0; --amber-soft:#23352D;
   --sage-soft:#24352B; --sage-ink:#BFE0B7; --rose-soft:#3F2730; --rose-ink:#F5C2C2;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
 }
@@ -193,13 +193,13 @@ svg.viz .lbl{fill:var(--ink);font-size:11.5px;font-weight:600;paint-order:stroke
 <script>
 "use strict";
 const DEMO = true;
-const SHOP_URL = "https://www.etsy.com/shop/LittleLanternApps";
+const SHOP_URL = "https://www.etsy.com/shop/GridoraStudioo";
 const KEY = DEMO ? "littlelantern.budget.demo.v1" : "littlelantern.budget.v1";
 const DEMO_LIMIT = 40;
 const COUNT_KEY = KEY + ".count";
 function getCount(){ try { return parseInt(localStorage.getItem(COUNT_KEY), 10) || 0; } catch(e){ return 0; } }
 function bumpCount(){ try { localStorage.setItem(COUNT_KEY, String(getCount() + 1)); } catch(e){} }
-const LOGO = '<svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="34" r="26" fill="#FDEBCC"/><path d="M24 14h16M32 8v6" stroke="#1F2A44" stroke-width="3.5" stroke-linecap="round"/><rect x="20" y="18" width="24" height="30" rx="9" fill="#1F2A44"/><rect x="25" y="23" width="14" height="20" rx="6" fill="#F2A541"/><path d="M22 52h20" stroke="#1F2A44" stroke-width="4" stroke-linecap="round"/></svg>';
+const LOGO = '<img class="logo" alt="Gridora Studio" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAMAAADVRocKAAAAkFBMVEXp5t2fqp5VYlt8j4QYIx7v7eeqqqrDxby/f3+/1L///wD//3///6qBhH8tUD48YE708usAAADv7eYlSDuqt6j///8VOi3U2M8sTEEcQjT5+PK4wrbj5NwrNjH08esjKiZoeXCKl45LZFlxhnr49/D5+PIyVEdMWFL39fCWppladGjHy8QaJyKdsZ3d4dfr6+MI7iFrAAAAMHRSTlMW/////08D/wQMAQID/////gD9//8C/////9D///9S//////+UtP//av///////yvxGmx0AAAHMUlEQVR42r1ai3aqOBQNYNv7nMEEAxGQl4II6v//3ZyTBHyQ6G1HLqvtqpDsnfM+CZLl42u1+gV/yfltv92t17681uvddv92JvDg12r1BIA8RsfpZLPd+YZrt92QcdBXCBT6XoNTvCb/7vZkGPlpghWufUSfCjByoByrTxPAosgedU79hxc+XoMYViHMBO9/CH9D8f7nBLCazdqsGCMFjFtvLHoiRu2ct3+0+BsxtmejnqYEqx/Ljf9JfDV8s/yxek7wviTbT8MPQpDl+zMCsO7a//K1JhNDkHt8sC79Kj5FW68eEaxQ/fTrElA0xMpO8H/xTQzkpfgGBvJa/CkDucI/vwBfQpyvGMiNf74AX/rSlbeSMT+8Cl8xjFljJFhuX4WPDNvlHYE08Cuv0dBkMID/4mswgyb49kIFaSV9uyJ4uYKulKQIrB70vKhZRkhPGghWy71NQXGQPMGPYxvDXopAdAhYZgdBED7EhwEWBh0MBH/ebPit4xwfMdDgGAROYGF4U+jWGIb1O+FJyUDvVS2buwQfhvAnscczsbgQlfoB6CQYZKC3Jd5X+L4fggyJcYnoSEiwMz2leukA0zqnk9deKFCaoOpofAxO+DkM9D/3a9whwU9zECewrFANS+K2qjkvA+2T8BvmjLNDG8uF08vgaTj/JBYfDY5OJ2fjav8VvKw5y0P1+eTVvC4FrwtFR320AzV7KtjhsYZwtaJuaVgxHnl4q625OHQ0KJVUUkdGO4OOwIOwjtk8PMTVgjI8KX/sch61F1xaRFzknRUfrzMYeWMJRBqDYuMINNPJj6i3RvCU122ib4QeS7mTSHxzytgAgSmPUiVDG1Q8irRxUfkHBlepVCetE0U8B2dK7IWHfDeYgPpdjmsK2iqNmHBjiZgUjAsgEKxSFPFBiJodlH5yx4Sz+07ItJUAfLdvQmD4qEQU1QJsKm3L3bZGGXhUUOmqdVvxA+Yi6vapYwDyCXkzCPaRZmnvAoNfiIixCOxcgW0bxw8RH2+UFd4MfY9XaI9mkWUGBshHZBIF1A/ShVukCwbGbXkkIZmAVYMmFAFQCMFQc37Ve6C8Jsucpk/be1NDJJB7GyN+FnXwt2exX3ANqE07EMANFWXVovLDBlefAENxp2+wMtnd33LSDPXvf7AsjZ2BQOQyo14IRCxd1VsUYdSnASaMps/uGMDKt6maKvxEzu1AS64Y8A6+kmC8ESgC7rqLVP1P3Sz7fZd11/e1oMj6RuVeQIOlDQvmB5U3okEEJIAbFQdVfugJft73+TUDEtxa2Mkyd8jtwNBcCHL5uGTgt/IOx1WHVcTSphsn+DnMv7UpudFY4mZgKDp6cZ5yrvwIVYRpqHG5GAkwNNLUvRQKdJA0vNEJubUwOBwyDBJnfR6XXDpN5KHne4nv1EK5VQt8dVD0WUl1bkEDut2tzok/YcgcncvAZqiYAEQAElj5QaWIgtWCw2fBCvykvULjh75dRSqJNgtwbekTfepibHkyowalEKWsKoGLOaLzVCjDOgbYIls0p/u4JdM07S6kK7iLLE2bADIcL2Od/qESdDnXwB3WzSJ20zTto1DhT4v/pGXRrgDRmRVBw7H2BrrQh1Aqwdy1LBAyWx8gLHgUQG5JO3DAwRiP4kAy/Ia1Y/T79MCiOtb1AKnBvsKlYz2I65qBeqTzpOigdNob7UxJFlYDpsa4BieNcmVbiAIhMwdkVRV1VQQCeDgO8u8iNyX+Hdma6gS4hgpUT0gX8k4YBYI3lcqsWJSTAqKgOvBcFtAuNeDLZLc3V0wsN9ARVcrnwWvQth49qTAWIndU8S94rvszagTakzd73w/VvNJRBq4k26IxFwklBiS7w9DfGKv+m6lkaiGwKy2GgsOaWOU/NtyoJCZUtPioGUwgxFj05TPsq6mjCWSyu64HjOt60Be+dRMhi75tf4wdLSQeEV3S9U1FG+uBhx3UMbS2LZbGS/XktwT0nkDWg0J2UE7o2xqvsxkfd0Z0LPpY0WQnxLQNIiYlAFetLnsJY+tobH7DYecVulxCypIpO6Gaq4oDEqgC8aF2i47zYW5+je37IADmzlL6Kc8ppD1wVcx5SMnjEDJRXehhIEJnbt/NG5CxYYb5WGgiVpdc9pAoSAoZipWM/zMkEZuKcANi2UIpJ8K5H7DBgUWLYYuDpnCh2IA4bRCrRjs+Goyst1C2cwTNILeakNYYtqO6MmI2bLCxO41jzCbWm0DjNlZtixI1F55218GKYR6rYDwOY+zbWOtGHDcWei6lk55Q/Z4gXGzrHzbi9qME3DwOc6cb8ctOy4I/HiXYD0Ng9unpKxAL/tVhiPU4B9wjeX7yZB5zc5wz/4HU7Edq8x8Kzn6sOf/B7PxHy7Mfjs9/vD//C4r5X7HM/5Jo/tdc87+om/9V4/wvS+d/3Tv/C+v5X7n/hS8NzP+1h7/wxY2/8NWT+b8885qv//wHWc6GAtZGODoAAAAASUVORK5CYII=">';
 const CURRENCIES = ["USD","EUR","GBP","CAD","AUD","NZD","CHF","SEK","NOK","DKK","PLN","INR","JPY","MAD","AED","ZAR","MXN","BRL"];
 const CATS = ["Groceries","Eating out","Transport","Home","Kids","Health","Fun","Shopping","Other"];
 const ICONS = {
@@ -572,8 +572,8 @@ function confirmBox(text, okText){
 /* ---------- views ---------- */
 // Colour themes: [bg, card, ink, muted, line, accent, accent text, accent soft, text on accent], light then dark.
 const PALETTES = {
-  lantern:  { name: "Lantern",  light: ["#FFF8EC","#FFFFFF","#1F2A44","#6B7280","#EFE6D6","#F2A541","#7A4A06","#FDEBCC","#2A1A02"],
-                                dark:  ["#141B2D","#1F2A44","#F5EFE3","#A9B1C4","#2E3A58","#F2A541","#FFD9A0","#3A3326","#2A1A02"] },
+  lantern:  { name: "Gridora",  light: ["#F4F2EA","#FFFFFF","#1C2B25","#5F6B64","#E3E4DA","#2F6B54","#1F4D3E","#E1EBE3","#FFFFFF"],
+                                dark:  ["#111916","#1B2621","#EEF2EC","#A3B1A8","#2B3A33","#8CC2A4","#C4E3D0","#23352D","#0E1F17"] },
   sage:     { name: "Sage",     light: ["#F4F7F0","#FFFFFF","#1E2B24","#5F6B63","#DFE8D8","#8DB580","#2F5A2A","#E2EEDC","#14261A"],
                                 dark:  ["#131C17","#1C2A22","#EEF3EA","#A3B3A8","#2C3D33","#9CC48F","#C6E6BC","#26382D","#14261A"] },
   lavender: { name: "Lavender", light: ["#F7F4FB","#FFFFFF","#2A2340","#6B6680","#E7E0F2","#B39DDB","#5A3E8C","#ECE4F8","#1E1236"],
@@ -765,7 +765,7 @@ function viewSettings(){
   if (!DEMO) h += '<div class="card"><h3>Use it like an app</h3><p class="small" style="margin:0"><b>iPhone / iPad:</b> open in Safari → Share → Add to Home Screen.<br><b>Android:</b> Chrome → ⋮ menu → Add to Home screen.<br><b>Computer:</b> Chrome or Edge → install icon in the address bar.<br>Once added, it works offline.</p></div>';
   else h += '<div class="card"><h3>Enjoying the demo?</h3><p class="small muted" style="margin-top:0">The full app has no spend limit, can be added to your Home Screen and works offline. Download a backup first and the full app will open it.</p><a href="' + esc(SHOP_URL) + '" target="_blank" rel="noopener"><button class="wide">Get the full app</button></a></div>';
   h += '<div class="card"><h3>Start over</h3>' + (S.example ? '<button class="wide" data-act="fresh">Start fresh with my numbers</button>' : '<button class="ghost wide" data-act="reset">Erase everything</button>') + "</div>";
-  h += '<p class="small muted" style="text-align:center">Lantern Budget by LittleLanternApps · Not financial advice.</p>';
+  h += '<p class="small muted" style="text-align:center">Lantern Budget by Gridora Studio · Not financial advice.</p>';
   return h + "</div></div>";
 }
 
